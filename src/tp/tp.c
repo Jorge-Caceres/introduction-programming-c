@@ -9,11 +9,8 @@
     C.I.: 4787628
 */
 
-int executeOperation(int n1, int n2, char *operatorSymbol);
-int addition(int n1, int n2);
-int substraction(int n1, int n2);
-int multiplication(int multiplicand, int multiplier);
-int division(int dividend, int divisor);
+int execute_integer_operation(int n1, int n2, char *operatorSymbol);
+double execute_real_number_operation(double r, int operation);
 bool checkLength(int number, int max_length);
 
 int numberType(int type);
@@ -26,7 +23,7 @@ int main()
 
     int number_type;
 
-    printf("Ingrese el codigo de acuerdo al tipo de numero con el que desea trabajar. (Enteros = 1 / Reales = 2 / Fraccionarios = 3) : ");
+    printf("Ingrese el codigo de acuerdo al tipo de numero con el que desea trabajar. (Enteros -> 1 / Reales -> 2 / Fraccionarios -> 3) : ");
     scanf("%d", &number_type);
     getchar();
 
@@ -59,8 +56,24 @@ int main()
             return 0;
         }
 
-        int integer_operation_result = executeOperation(integer_1, integer_2, operator);
+        int integer_operation_result = execute_integer_operation(integer_1, integer_2, operator);
         printf("%d %s %d = %d\n", integer_1, operator, integer_2, integer_operation_result);
+    }
+    else if (number_type == 2)
+    {
+
+        int operation_type = 0;
+        double real_number;
+
+        printf("Tiene 8 operaciones posibles, digite el número de la operación a efectuar. Raíz cuadrada -> 1 Raíz cúbica -> 2 \n Seno -> 3 Coseno -> 4 \n Logaritmo natural -> 5 Logaritmo en base 10 -> 6 \n Valor absoluto -> 7 Tangente -> 8 ")
+            scanf("%d", &operation_type);
+
+        printf("Ingrese un número real sobre el que se aplicará la operación: ");
+        scanf("%lf", &real_number);
+
+        double real_number_result = execute_real_number_operation(r, operation_type);
+        printf("%s %lf", real_number_result);
+
     }
 
     getchar();
@@ -81,27 +94,27 @@ bool checkLength(int number, int max_length)
 }
 
 //Executes the operation by the provided operator.
-int executeOperation(int n1, int n2, char *operatorSymbol)
+int execute_integer_operation(int n1, int n2, char *operatorSymbol)
 {
     if ('+' == *(operatorSymbol))
     {
 
-        return addition(n1, n2);
+        return n1 + n2;
     }
     else if ('-' == *(operatorSymbol))
     {
 
-        return substraction(n1, n2);
+        return n1 - n2;
     }
     else if ('*' == *(operatorSymbol))
     {
 
-        return multiplication(n1, n2);
+        return n1 * n2;
     }
     else if ('/' == *(operatorSymbol))
     {
 
-        return division(n1, n2);
+        return n1 / n2;
     }
     else
     {
@@ -109,37 +122,37 @@ int executeOperation(int n1, int n2, char *operatorSymbol)
     }
 }
 
-int addition(int n1, int n2)
-{
-    return n1 + n2;
-}
-
-int substraction(int n1, int n2)
-{
-    return n1 - n2;
-}
-
-int multiplication(int multiplicand, int multiplier)
+//Raíz cuadrada -> 1 Raíz cúbica -> 2 \n Seno -> 3 Coseno -> 4 \n Logaritmo natural -> 5 Logaritmo en base 10 -> 6 \n Valor absoluto -> 7 Tangente -> 8 ")
+double execute_real_number_operation(double r, int operation)
 {
 
-    int accumulated = 0;
-    int product = 0;
-    while (accumulated < multiplier)
+    switch (operation)
     {
-        accumulated++;
-        product += multiplicand;
+    case 1:
+        return sqrt(r);
+        break;
+    case 2:
+        return cbrt(r);
+        break;
+    case 3:
+        return sin(r);
+        break;
+    case 4:
+        return cos(r);
+        break;
+    case 5:
+        return log(r);
+        break;
+    case 6:
+        return log10(r);
+        break;
+    case 7:
+        return fabs(r);
+        break;
+    case 8:
+        return tan(r);
+        break;
+    default:
+        break;
     }
-    return product;
-}
-
-int division(int dividend, int divisor)
-{
-    int substraction = dividend;
-    int accumulated = 0;
-    while (substraction >= divisor)
-    {
-        accumulated++;
-        substraction -= divisor;
-    }
-    return accumulated;
 }
