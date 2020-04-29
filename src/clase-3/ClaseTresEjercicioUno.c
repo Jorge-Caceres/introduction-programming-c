@@ -22,6 +22,7 @@ int main()
 {
     int n1 = 0;
     int n2 = 0;
+    printf("Calculador. Por favor, especifique los numeros y el operador matematico. \n");
     printf("Ingrese un numero: ");
     scanf("%d",&n1);
 	getchar();
