@@ -4,7 +4,7 @@
 
 void generar_numeros(int v[]);
 void cargar_matriz_letras(int x, int v, char matriz_letras[x][v]);
-void impresion(int x, int v, char matriz_letras[x][v]);
+void imprimir_matriz(int x, int v, char matriz_letras[x][v]);
 
 /*
     Alumno: Jorge Cáceres Flores
@@ -36,12 +36,12 @@ int main()
 
     cargar_matriz_letras(v[0], v[1], matriz_letras);
 
-    impresion(v[0], v[1], matriz_letras);
+    imprimir_matriz(v[0], v[1], matriz_letras);
 
     return 0;
 }
 
-void impresion(int x, int v, char matriz_letras[x][v])
+void imprimir_matriz(int x, int v, char matriz_letras[x][v])
 {
     int i, j;
     for (i = 0; i < x; i++)

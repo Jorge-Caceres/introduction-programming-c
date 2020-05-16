@@ -23,21 +23,34 @@ se ha realizado una vez terminado el proceso de impresión de ordenamiento.
 
 Se debe poder elegir que se haga el ordenamiento de manera automática de los 10 alumnos o poder ver los cables del alumno y luego decidir si queremos ordenarlos o no.
 
+Agregue una opción mas al menú en donde permita mostrar quien de los alumnos tuvo el menor cantidad de pasos para ordenar, así como aquel que tuvo mas pasos. 1P
+
  * */
 
 void generar_vector_cables(int alumnos, int cables, int vector_cables[alumnos][cables]);
+
 void imprimir_cables_por_alumno(int alumnos, int cables, int vector_cables[alumnos][cables], char vector_alumnos[alumnos][alumnos]);
-// void imprimir_matriz(int palabras, int longitud, char strings[palabras][longitud]);
+
 void obtener_longitud(int longitudes, int vector_longitudes[longitudes]);
+
 void imprimir_cable(int longitud);
+
 void ordenar_cables_por_alumno(int alumnos, int cables, int vector_cables[alumnos][cables], char vector_alumnos[alumnos][alumnos]);
-void imprimir_ordenamiento(int alumnos,int cables,int vector_cables[alumnos][cables]);
+
+void imprimir_ordenamiento(int alumnos, int cables, int vector_cables[alumnos][cables]);
+
+int obtener_decision_usuario(int menu);
+
+void obtener_estadistica_ordenamiento(int alumnos, int matriz_pasos[alumnos][1], char vector_alumnos[alumnos][10]);
 
 int main()
 {
+    int cantidad_alumnos = 3;
 
-    char alumnos[1][10] = {
-        "Agustín"};
+    char alumnos[10][10] = {
+        "Agustín",
+        "Beatriz",
+        "Carlos"};
     // char alumnos[10][10] = {
     //     "Agustín",
     //     "Beatriz",
@@ -51,13 +64,12 @@ int main()
     //     "Juan"};
 
     int cables = 20;
-    int cantidad_alumnos = 1;
 
-    // int mostrar_cables = 0;
-    // int ordernar_cables = 0;
-    // printf("Si desea ver los cables repartidos a los alumnos, antes de ordenarlos, ingrese 1: ");
-    // scanf("%d", &mostrar_cables);
-    // getchar();
+    int menu_inicial = 1;
+    int menu_dos = 2;
+    int mostrar_cables = obtener_decision_usuario(menu_inicial);
+
+    int ordernar_cables = 0;
 
     int vector_cables[cantidad_alumnos][cables];
 
@@ -65,21 +77,21 @@ int main()
 
     generar_vector_cables(cantidad_alumnos, cables, vector_cables);
 
-    imprimir_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
-    ordenar_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
+    if (mostrar_cables)
+    {
+        imprimir_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
+        ordernar_cables = obtener_decision_usuario(menu_dos);
+        if (ordernar_cables)
+        {
+            ordenar_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
+        }
+    }
+    else
+    {
+        ordenar_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
+    }
 
-    //imprimir_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
-    // if (mostrar_cables)
-    // {
-    //     imprimir_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
-    //     printf("Para ordenar los cables, ingrese 1, sino 0. Serán imprimidos.");
-    //     scanf("%d", &ordernar_cables);
-    //     getchar();
-    //     if (ordernar_cables)
-    //     {
-    //         ordenar_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
-    //     }
-    // }
+    imprimir_cables_por_alumno(cantidad_alumnos, cables, vector_cables, alumnos);
 
     return 0;
 }
@@ -101,9 +113,18 @@ void imprimir_cables_por_alumno(int alumnos, int cables, int vector_cables[alumn
 void ordenar_cables_por_alumno(int alumnos, int cables, int vector_cables[alumnos][cables], char vector_alumnos[alumnos][alumnos])
 {
     int i, j, k, l = 0;
+
     int aux;
+
+    int menor_pasos, mayor_pasos, posicion_mayor, posicion_menor, aux_mayor, aux_menor;
+
+    int matriz_pasos[10][1];
+
+    //cantidad de pasos que toma el ordenamiento.
+    int pasos;
     for (i = 0; i < alumnos; i++)
     {
+        pasos = 0;
         printf("Alumno [%s] \n", vector_alumnos[i]);
         for (j = 0; j <= cables - 1; j++)
         {
@@ -115,28 +136,15 @@ void ordenar_cables_por_alumno(int alumnos, int cables, int vector_cables[alumno
                     vector_cables[i][j] = vector_cables[i][k];
                     vector_cables[i][k] = aux;
                     imprimir_ordenamiento(alumnos, cables, vector_cables);
+                    pasos++;
                 }
             }
         }
-        printf("\n");
+        matriz_pasos[i][0] = pasos;
+        printf("Pasos de ordenamiento: [%d] \n", pasos);
     }
+    obtener_estadistica_ordenamiento(alumnos, matriz_pasos, vector_alumnos);
 }
-
-/*
-void ordenar_palabras(int palabras, int longitud, char strings[palabras][longitud]){
-	int i,j;
-	char aux[7];
-	for(i=0; i <= palabras -1; i++){
-		for(j=i+1; j < palabras ; j++){
-			if(strcmp(strings[i], strings[j])>0){
-				strcpy(aux, strings[i]);
-				strcpy(strings[i], strings[j]);
-				strcpy(strings[j], aux);
-			}
-		}
-	}
-}
-*/
 
 void imprimir_cable(int longitud)
 {
@@ -175,6 +183,7 @@ void obtener_longitud(int longitudes, int vector_longitudes[longitudes])
             }
         }
 
+        //en caso de que el numero generado no exista en el vector aun, agregamos.
         if (agregar)
         {
             vector_longitudes[i] = numero;
@@ -186,10 +195,11 @@ void obtener_longitud(int longitudes, int vector_longitudes[longitudes])
 void generar_vector_cables(int alumnos, int cables, int vector_cables[alumnos][cables])
 {
     int vector_longitudes[cables];
-    obtener_longitud(cables, vector_longitudes);
     int i, j;
     for (i = 0; i < alumnos; i++)
     {
+        //cargo el vector con longitudes aleatorias por cada alumno
+        obtener_longitud(cables, vector_longitudes);
         for (j = 0; j < cables; j++)
         {
             vector_cables[i][j] = vector_longitudes[j];
@@ -197,7 +207,7 @@ void generar_vector_cables(int alumnos, int cables, int vector_cables[alumnos][c
     }
 }
 
-void imprimir_ordenamiento(int alumnos,int cables, vector_cables[alumnos][cables])
+void imprimir_ordenamiento(int alumnos, int cables, vector_cables[alumnos][cables])
 {
     int i, j = 0;
     for (i = 0; i < alumnos; i++)
@@ -208,4 +218,63 @@ void imprimir_ordenamiento(int alumnos,int cables, vector_cables[alumnos][cables
         }
         printf("\n");
     }
+}
+
+int obtener_decision_usuario(int menu)
+{
+
+    int decision;
+    if (menu == 1)
+    {
+        while (decision < 0 || decision > 1)
+        {
+            printf("Para ver los cables repartidos, ingrese 1. Si quiere ordenarlos automaticamente, ingrese 0. ");
+            scanf("%d", &decision);
+            getchar();
+        }
+    }
+    else if (menu == 2)
+    {
+        while (decision < 0 || decision > 1)
+        {
+            printf("Si desea ordenar los cables, ingrese 1, sino ingrese 0.");
+            scanf("%d", &decision);
+            getchar();
+        }
+    }
+    return decision;
+}
+
+void obtener_estadistica_ordenamiento(int alumnos, int matriz_pasos[alumnos][1], char vector_alumnos[alumnos][10])
+{
+
+    int menor, mayor, posicion_mayor, posicion_menor;
+
+    int i;
+    for (i = 0; i < alumnos; i++)
+    {
+        if (i == 0)
+        {
+            menor = matriz_pasos[i][0];
+            mayor = matriz_pasos[i][0];
+            posicion_mayor = i;
+            posicion_menor = i;
+        }
+        else
+        {
+
+            if (matriz_pasos[i][0] < menor)
+            {
+                menor = matriz_pasos[i][0];
+                posicion_menor = i;
+            }
+            else if (matriz_pasos[i][0] > mayor)
+            {
+                mayor = matriz_pasos[i][0];
+                posicion_mayor = i;
+            }
+        }
+    }
+    printf("%s tuvo la menor cantidad de pasos de ordenamiento [%d] \n", vector_alumnos[posicion_menor], menor);
+    printf("%s tuvo la mayor cantidad de pasos de ordenamiento [%d] \n", vector_alumnos[posicion_mayor], mayor);
 }
